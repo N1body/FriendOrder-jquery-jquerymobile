@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title></title>
+		<!-- 引入 jQuery Mobile 样式 -->
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+		<!-- 引入 jQuery 库 -->
+		<script src="js/jquery-1.11.3.min.js"></script>
+		<!-- 引入 jQuery Mobile 库 -->
+		<script src="js/jquery.mobile-1.4.5.min.js"></script>
+		<style type="text/css">
+			#main {
+				padding: 0;
+				left: 0 !important;
+				right: 0;
+				top: 43px !important;
+				bottom: 60px !important;
+				position: absolute !important;
+				background-color: white;
+			}
+			
+			#money {
+				position: relative;
+				width: 95%;
+				height: 140px;
+				margin: 4% 2.5%;
+				background: linear-gradient(to right, rgb(47, 128, 237), rgb(86, 204, 242));
+				margin-bottom: 5px;
+				border-radius: 10px;
+			}
+
+			#money_title {
+				position: absolute;
+				font-size: 15px;
+				margin-left: 15px;
+				margin-top: 15px;
+				color: #A1EBFF;
+				text-shadow: 0px 1px 1px rgb(35, 170, 250);
+			}
+
+			#money_num {
+				position: absolute;
+				color: white;
+				text-shadow: 0px 1px 1px rgb(35, 170, 250);
+				font-size: 30px;
+				margin-top: 65px;
+				margin-left: 15px;
+			}
+
+			#footer {
+				position: absolute;
+				background-color: white;
+				left: 0;
+				right: 0;
+				bottom: 0;
+			}
+
+			#but {
+				width: 85%;
+				margin: 2% 2.5%;
+				color: white !important;
+				background-color: #0088FF !important;
+				text-shadow: 1px 1px 1px #0088FF !important;
+			}
+
+			#input_money {
+				width: 95%;
+				margin-left: 2.5%;
+				border-radius: 5px;
+				height: 50px;
+				border: #DDDDDD 1px solid;
+				margin-top: 5%;
+			}
+
+			#input_money>input {
+				padding-top: 3px;
+				float: right;
+				width: 30%;
+				font-size: 20px;
+				height: 46px;
+				line-height: 46px;
+				text-align: right;
+				border: none;
+				color: #0088FF;
+			}
+
+			#input_money>span {
+				font-size: 20px;
+				line-height: 50px;
+				margin-left: 5%;
+			}
+			
+			#input_money p{
+				/* float: right; */
+				position: absolute;
+				right: 2.5%;
+				color: #0088FF;
+			}
+			
+			#footer button{
+				color: white !important;
+				background-color: #0088FF !important;
+				text-shadow: 1px 1px 1px #0088FF !important;
+				width: 95%;
+				margin-left: 2.5%;
+			}
+			.ui-radio{
+				width: 95%;
+				margin-left: 2.5%;
+			}
+			
+			#draw_cash_way label{
+				border: none;
+				height: 30px;
+				line-height: 30px;
+				padding-left: 70px;
+				font-size: 18px;
+
+			}
+		</style>
+	</head>
+	<body>
+		<div data-role="page">
+			<div data-role="header" data-add-back-btn="true">
+				<a id="back" href="main.html" rel="external" data-role="button" data-icon="arrow-l"
+					data-iconpos="notext">left</a>
+				<h1>充值</h1>
+			</div>
+
+			<div data-role="main" class="ui-content" id="main">
+				<div id="money">
+					<p id="money_title">
+						钱包余额(元)
+					</p>
+					<p id="money_num">0.00</p>
+				</div>
+				
+				<div id="draw_cash_way">
+					<input type="radio" name="way" id="way1" value=""/><label for="way1"><span><img src="img/wechatPay.png" style="height: 30px; position: absolute; left: 10%;"></span>提现到微信</label>
+					<input type="radio" name="way" id="way2" value=""/><label for="way2"><span><img src="img/alipay.png" style="height: 30px; position: absolute; left: 10%;"></span>提现到支付宝</label>
+					<input type="radio" name="way" id="way3" value=""/><label for="way3"><span><img src="img/银行卡包.png" style="height: 30px; position: absolute; left: 10%;"></span>提现到银行卡</label>					
+				</div>
+				
+				
+				<div id="input_money">
+					<span>输入提现金额</span>
+					<span style="float: right; margin-right: 5%;">元</span>
+					<input type="" style="outline: none;" oninput="value=value.replace(/[^\d]/g,'')" />
+					<p>全部提现</p>
+				</div>
+				
+				
+			</div>
+
+			<div datab-role="footer" data-position="fixed" data-tap-toggle="false" id="footer">
+				<button type="button">立即提现</button>
+			</div>
+
+
+			</div>
+
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		var username;
+		var passwd;
+		
+		backPage();
+		drawCash();
+		
+		function drawCash(){
+			$("#draw_cash_way>label").eq(0).click();
+			if (username && passwd) {
+				var user_info = JSON.parse(localStorage.getItem(username));
+				$("#money_num")[0].innerText = returnFloat(user_info.money);
+				$("#input_money p").click(function(){
+					$("#input_money>input").val(returnFloat(user_info.money));
+				})
+				$("#footer button").click(function(){
+					var input_num = Number($("#input_money>input").val());
+					if(input_num>0 && user_info.money>=input_num){
+						user_info.money = user_info.money - input_num;
+						$("#money_num")[0].innerText = returnFloat(user_info.money);
+						alert("提现成功");
+						localStorage.setItem(username, JSON.stringify(user_info));
+					}
+					else if(input_num==0){
+						alert("请输入金额");
+					}
+					else{
+						alert("余额不足");
+					}
+				})
+			}
+			else{
+				$("#footer button").click(function(){
+					alert("请先登录后再提现");
+				})
+			}
+		}
+		
+		function backPage() {
+			var url = decodeURI(location.href);
+			var getval = url.split('?')[1];
+			if (getval && getval.split('&').length >= 2) {
+				var user = getval.split('&')[0].split('=')[1];
+				var pwd = getval.split('&')[1].split('=')[1];
+				if (JSON.parse(localStorage.getItem(user)).passwd == pwd) {
+					username = user;
+					passwd = pwd;
+					$("#back").attr("href", "main.html" + "?" + getval + '&' + "operate=meBack");
+				}
+			}
+		}
+		
+		function returnFloat(value) {
+			value = value.toString();
+			var num = value.split(".").length;
+			if (num == 1) {
+				value = value.toString() + ".00";
+				return value;
+			} else if (num == 2) {
+				if (value.split(".")[1].length == 1) value = value.toString() + "0";
+				else value = value.split(".")[0] + "." + value.split(".")[1].substring(0, 2);
+				return value;
+			}
+		}
+	</script>
+
+</html>

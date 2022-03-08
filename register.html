@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>注册页</title>
+		<!-- 引入 jQuery Mobile 样式 -->
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+		<!-- 引入 jQuery 库 -->
+		<script src="js/jquery-1.11.3.min.js"></script>
+		<!-- 引入 jQuery Mobile 库 -->
+		<script src="js/jquery.mobile-1.4.5.min.js"></script>
+		<style type="text/css">
+			#account,
+			#passwd,
+			#repasswd {
+				height: 50px;
+				width: 100%;
+			}
+
+			#register {
+				margin-top: 20px;
+				color: white;
+				background-color: rgb(66, 177, 255);
+				text-shadow: 1px 1px 1px #333;
+				;
+			}
+
+			#userwarn,
+			#pwdwarn,
+			#repwdwarn {
+				font-size: 12px;
+				color: red;
+			}
+		</style>
+	</head>
+	<body>
+		<div data-role="page">
+			<div data-role="header" data-add-back-btn="true">
+				<a href="login.html" rel="external" data-role="button" data-icon="arrow-l"
+					data-iconpos="notext">left</a>
+				<h1>注册</h1>
+			</div>
+
+			<div data-role="main" class="ui-content">
+				<input type="text" id="account" value="" placeholder="账号" />
+				<p id="userwarn"></p>
+				<input type="password" id="passwd" value="" placeholder="密码" />
+				<p id="pwdwarn"></p>
+				<input type="password" id="repasswd" value="" placeholder="确认密码" />
+				<p id="repwdwarn"></p>
+				<button type="button" id="register">注册</button>
+
+			</div>
+
+
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		var user = $("#account");
+		var pwd = $("#passwd");
+		var repwd = $("#repasswd");
+		var userwarn = $("#userwarn");
+		var pwdwarn = $("#pwdwarn");
+		var repwdwarn = $("#repwdwarn");
+		var regist = $("#register");
+
+		var user_info = {
+			username: "",
+			passwd: "",
+			money: 0,
+			address: "",
+			orderlist:[],
+		};
+
+		var user_reg = /^[a-zA-Z]([a-zA-Z0-9_]{7,15})/;
+		var pwd_reg = /[0-9]{6,8}/;
+		var juge = [false, false, false];
+
+		function $(str) {
+			return document.querySelector(str);
+		}
+
+		user.oninput = function() {
+			if (user.value == "") {
+				userwarn.innerText = "提示：请输入用户名";
+			} else if (!user_reg.test(user.value)) {
+				userwarn.innerText = "提示：用户名必须以字母开头，只能包含数字字母或下划线，长度为8-15位";
+			} else if (localStorage.getItem(user.value) != null) {
+				userwarn.innerText = "提示：该用户名已存在，请重新输入";
+			} else {
+				userwarn.innerText = "";
+				juge[0] = true;
+			}
+		}
+
+		pwd.oninput = function() {
+			if (pwd.value == "") {
+				pwdwarn.innerText = "提示：请输入密码";
+			} else if (!pwd_reg.test(pwd.value)) {
+				pwdwarn.innerText = "提示：密码必须为数字，长度为6-8位";
+			} else {
+				pwdwarn.innerText = "";
+				juge[1] = true;
+			}
+		}
+
+		repwd.oninput = function() {
+			if (repwd.value == "") {
+				repwdwarn.innerText = "提示：请再次输入密码";
+			} else if (repwd.value != pwd.value) {
+				repwdwarn.innerText = "提示：与上面密码不一致";
+			} else {
+				repwdwarn.innerText = "";
+				juge[2] = true;
+			}
+		}
+
+		regist.onclick = function() {
+			if (juge[0] && juge[1] && juge[2]) {
+				user_info.passwd = pwd.value;
+				user_info.username = user.value;
+				localStorage.setItem(user.value, JSON.stringify(user_info));
+				alert("注册成功，即将自动跳转到登录页面");
+				window.location.href = "login.html";
+			} else {
+				alert("输入的用户名或密码无效，请重新输入");
+			}
+		}
+	</script>
+</html>
