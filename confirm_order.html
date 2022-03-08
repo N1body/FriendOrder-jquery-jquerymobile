@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title></title>
+		<!-- 引入 jQuery Mobile 样式 -->
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+		<!-- 引入 jQuery 库 -->
+		<script src="js/jquery-1.11.3.min.js"></script>
+		<!-- 引入 jQuery Mobile 库 -->
+		<script src="js/jquery.mobile-1.4.5.min.js"></script>
+		<style type="text/css">
+			#main {
+				padding: 0;
+				left: 0 !important;
+				right: 0;
+				top: 43px !important;
+				bottom: 60px !important;
+				position: absolute !important;
+			}
+
+			#footer {
+				position: absolute;
+				background-color: white;
+				left: 0;
+				right: 0;
+				bottom: 0;
+			}
+
+			#but {
+				width: 85%;
+				margin: 2% 2.5%;
+				color: white !important;
+				background-color: #0088FF !important;
+				text-shadow: 1px 1px 1px #0088FF !important;
+			}
+
+
+			#pay_title {
+				text-align: center;
+				font-size: 20px;
+				height: 25px;
+				line-height: 25px;
+				margin-top: -2%;
+				border-bottom: #DDDDDD 1px solid;
+				padding-bottom: 10px;
+			}
+
+			#pay_num {
+				text-align: center;
+				font-size: 30px;
+				font-weight: 600;
+				margin-top: -5%;
+				border-bottom: #DDDDDD 1px solid;
+				padding-bottom: 15px;
+			}
+
+			#pay_way {
+				height: 50px;
+				line-height: 50px;
+				/* background-color: #0088BB; */
+				margin-top: -10%;
+				border-bottom: #DDDDDD 1px solid;
+			}
+
+			#pay_way img {
+				float: left;
+				margin-top: 5px;
+				margin-left: 5%;
+				margin-right: 2%;
+			}
+
+			#pay_but button {
+				color: white !important;
+				background-color: #499de3 !important;
+				text-shadow: 1px 1px 1px #499de3 !important;
+				margin-top: 5%;
+			}
+
+			.address,
+			.info,
+			.money {
+				padding-top: 1%;
+				width: 94%;
+				margin: 5% 3%;
+				border-radius: 5px;
+				background-color: white;
+				border: #F9F9F9 1px solid;
+				box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+			}
+
+			.address {
+				/* padding-top: 10px; */
+				padding-bottom: 10px;
+			}
+
+			.address_top {
+				background: url(img/black.png) no-repeat;
+				background-size: 50px;
+				background-position: 2% 0;
+				margin-top: -2%;
+				/* background-color: #0088FF; */
+
+			}
+
+			.address_bottom {
+				margin-top: 8%;
+				background: url(img/red.png) no-repeat;
+				background-size: 50px;
+				background-position: 2% 0;
+			}
+
+			.address_top>h3,
+			.address_bottom>h3 {
+				margin: 6% 18% 0%;
+			}
+
+			.address_bottom>h3 {
+				color: red;
+			}
+
+			.address_top>p,
+			.address_bottom>p {
+				color: #BBBBBB;
+				margin: 3% 18%;
+				height: 20px;
+			}
+
+			.info,
+			.money {
+				padding-top: 0;
+			}
+
+			.info>ul,
+			.money>ul {
+				margin: 0 0 !important;
+			}
+
+			.info>ul>li>a,
+			.money>ul>li>a {
+				background-color: white !important;
+				height: 35px;
+				line-height: 35px;
+				box-shadow: none !important;
+				font-weight: 500;
+				color: rgb(102, 102, 102) !important;
+			}
+
+			.ui-li-aside {
+				font-size: 15px !important;
+				line-height: 30px !important;
+				color: black !important;
+				font-weight: 600 !important;
+			}
+			
+			/* 遮罩层 */
+			.mask {
+				background-color: #4F535F;
+				position: fixed;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				display: none;
+				text-align: center;
+				z-index: 2;
+				opacity: 0.6;
+			}
+			
+			.modal {
+				z-index: 3;
+				position: fixed;
+				width: 100%;
+				background-color: white;
+				margin: auto;
+				opacity: 1;
+				border-radius: 20px 20px 0 0;
+				height: 0px;
+				bottom: 0;
+			}
+			
+			.delete {
+				height: 40px;
+				position: absolute;
+				top: -10%;
+				left: 4%;
+			}
+			
+			.set_money,.set_remarks{
+				width: 85%;
+				height: 100%;
+				margin: 0% 7.5%;
+				/* background-color: #0088FF; */
+			}
+			.set_money>h2,.set_remarks>h2{
+				margin: 5% 0 3%;
+			}
+			
+			.set_money>input,.set_remarks>input{
+				width: 100%;
+				height: 50px;
+				margin-top: 20px;
+				border-radius: 5px;
+				border: #333333 1px solid;
+				padding-left: 10px;
+			}
+			
+			.set_money>button,.set_remarks>button{
+				width: 104%;
+				border-radius: 5px;
+				margin-top: 25px;
+				border: #333333 1px solid;
+				height: 50px;
+				padding: 0;
+				color: white !important;
+				background-color: #0088FF !important;
+				text-shadow: 1px 1px 1px #0088FF !important;
+			}
+			
+			
+		</style>
+	</head>
+	<body>
+		<!-- 遮罩 -->
+		<div class="mask">
+			<!-- 遮罩层部分，不设置内容 -->
+		</div>
+		
+		<!-- 模态框 -->
+		<div class="modal">
+			<div class="set_money">
+				<h2>悬赏金额</h2>
+				<input type="number" class="num" placeholder="填写你要悬赏的金额"/ >
+				<button type="button">确认</button>
+			</div>
+			<div class="set_remarks">
+				<h2>备注信息</h2>
+				<input type="text" class="remarks_content" placeholder="填写你的订单备注信息"/ >
+				<button type="button">确认</button>
+			</div>
+			<div class="pick_up">
+				<h2>取件信息</h2>
+				<input type="text" class="address" placeholder="取件地址(请填写校内地址,例如:菜鸟驿站)" />	
+				<input type="text" class="name" placeholder="姓名(没有具体联系人填无)"/ >			
+				<input type="text" maxlength=11 class="phone" placeholder="电话(没有具体联系电话填无)" />				
+							
+				<button type="button">确认</button>
+			</div>
+		</div>
+		
+		<div data-role="page">
+			<div data-role="header" data-add-back-btn="true">
+				<a id="back" href="main.html" rel="external" data-role="button" data-icon="arrow-l"
+					data-iconpos="notext">left</a>
+				<h1>确认订单</h1>
+			</div>
+
+			<div data-role="main" class="ui-content" id="main">
+				<div class="address">
+					<div class="address_top">
+						<h3>从哪里取货？</h3>
+						<p>点击完善填写取货地址</p>
+					</div>
+
+					<div class="address_bottom">
+						<h3>要送到哪里？</h3>
+						<p>点击完善填写取货地址</p>
+					</div>
+				</div>
+
+				<div class="info">
+					<ul data-role="listview" data-inset="true">
+						<li><a href="#"><img src="img/信息.png" class="ui-li-icon" style="padding-top: 6px;">订单标题
+						<p class="ui-li-aside aside"></p>
+						</a>
+						</li>
+						<li><a href="#"><img src="img/时 间.png" class="ui-li-icon" style="padding-top: 6px;">取件时间
+						<p class="ui-li-aside aside">立即取件</p>
+						</a>
+						</li>
+						<li data-icon="false"><a href="#"><img src="img/种类.png" class="ui-li-icon" style="padding-top: 7px;">订单种类
+						<p class="ui-li-aside aside"></p>
+						</a></li>
+						</li>
+						<li><a href="#"><img src="img/我的优惠卷.png" class="ui-li-icon" style="padding-top: 7px;">优惠卷
+						<p class="ui-li-aside aside">暂无优惠卷</p>
+						</a>
+						</li>
+						<li><a href="#"><img src="img/备注.png" class="ui-li-icon" style="padding-top: 7px;">备注
+						<p class="ui-li-aside aside"></p>
+						</a></li>
+						</li>
+					</ul>
+				</div>
+
+
+				<div class="money">
+					<ul data-role="listview" data-inset="true">
+						<li><a href="#"><img src="img/悬赏.png" class="ui-li-icon" style="padding-top: 7px;">
+								悬赏金额
+								<p class="ui-li-aside aside">￥0.00</p>
+							</a>
+					</ul>
+				</div>
+			</div>
+
+
+
+			<div datab-role="footer" data-position="fixed" data-tap-toggle="false" id="footer">
+				<a href="#myPopup" data-rel="popup" class="ui-btn ui-btn-inline ui-corner-all" id="but">
+					立即下单
+				</a>
+				<div data-role="popup" id="myPopup" class="ui-content" data-dismissible="false" data-overlay-theme="b"
+					data-position-to="#main">
+					<a href="#" data-rel="back"
+						class="ui-btn ui-corner-all ui-shadow ui-btn ui-icon-delete ui-btn-icon-notext ui-btn-left">关闭</a>
+					<div id="pay_title">选择支付方式</div>
+					<div id="pay_content">
+						<p style="text-align: center; font-size: 18px;">友单</p>
+						<p id="pay_num">￥0.00</p>
+
+					</div>
+					<div id="pay_way">
+						<img src="img/wechatPay.png" style="height: 40px;">
+						<p>微信支付</p>
+					</div>
+
+					<div id="pay_but">
+						<button type="button">确认支付</button>
+					</div>
+				</div>
+
+
+			</div>
+
+		</div>
+	</body>
+
+	<script type="text/javascript">
+		var username;
+		var passwd;
+		var info_case; //情景
+		var info1; //输入框信息
+		var info2; //上面地址
+		var info3; //下面地址
+		var info4; //上面姓名电话
+		var info5; //下面姓名电话
+		var order = {
+			order_initiator: "",
+			order_title:"",
+			order_receiver: "",
+			pick_up: {pick_up_address:"",pick_up_man:"",pick_up_phone:""},
+			receive: {receive_address:"",receive_man:"",receive_phone:""},
+			pick_up_time: "",
+			order_classify: "",
+			remarks: "",
+			reward: "",
+			order_statement: "待接单",
+			order_number: "YD",
+		};
+		
+		$(function(){
+			$("#myPopup").css("width", window.innerWidth * 0.8);
+			backPage();
+			setMoney();
+			setRemarks();
+			setHideModal();
+			submit();
+		});
+		
+		
+		function submit(){
+			$("#pay_but button").click(function(){
+				getInfo();
+				var user_info = JSON.parse(localStorage.getItem(username));
+				if(user_info.money>=Number(order.reward)){
+					user_info.money = user_info.money - Number(order.reward);
+					user_info.orderlist.push(order);
+					localStorage.setItem(username, JSON.stringify(user_info));
+					alert("支付成功，即将跳转到主页");
+					window.location.href = $("#back")[0].href;
+				}
+				else{
+					alert("余额不足，请充值后再下单");
+				}
+			});
+		}
+		
+		function getInfo(){
+			order.order_initiator = username;
+			order.pick_up.pick_up_address = $(".address_top>h3")[0].innerText;
+			order.pick_up.pick_up_man = $(".address_top>p")[0].innerText.split(" ")[0];
+			order.pick_up.pick_up_phone = $(".address_top>p")[0].innerText.split(" ")[1];
+			order.receive.receive_address = $(".address_bottom>h3")[0].innerText;
+			order.receive.receive_man = $(".address_bottom>p")[0].innerText.split(" ")[0];
+			order.receive.receive_phone = $(".address_bottom>p")[0].innerText.split(" ")[1];
+			order.order_title = $(".info>ul>li>a>p")[0].innerText;
+			order.pick_up_time = $(".info>ul>li>a>p")[1].innerText;
+			order.order_classify = $(".info>ul>li>a>p")[2].innerText;
+			order.remarks = $(".info>ul>li>a>p")[4].innerText;
+			
+			order.reward = $(".money>ul>li>a>p")[0].innerText.split("￥")[1];
+			for(let i=0; i<10; i++) 
+			{
+			    order.order_number += Math.floor(Math.random()*10);
+			}
+		}
+		
+		function setRemarks(){
+			$(".info>ul>li>a").eq(4).click(function(){
+				$(".modal>div").hide();
+				$(".modal>div").eq(1).show();
+				$(".remarks_content").val("");
+				$(".mask").fadeIn();
+				setTimeout(function() {
+					$(".modal").animate({
+						height: '250px',
+					}, 300);
+				}, 100);
+				$(".set_remarks button").click(function(){
+					$(".info>ul>li>a>p")[4].innerText = $(".remarks_content").val();
+					$(".modal").animate({
+						height: '0px',
+					}, 300);
+					setTimeout(function() {
+						$(".mask").fadeOut();
+					}, 300);
+				})
+			});
+		}
+		
+		function setMoney(){
+			$(".money").click(function(){
+				$(".modal>div").hide();
+				$(".modal>div").eq(0).show();
+				$(".num").val("");
+				$(".mask").fadeIn();
+				
+				setTimeout(function() {
+					$(".modal").animate({
+						height: '250px',
+					}, 300);
+				}, 100);
+				
+				$(".set_money button").click(function(){
+					$(".money>ul>li>a>p")[0].innerText = "￥"+ returnFloat($(".num").val());
+					$(".modal").animate({
+						height: '0px',
+					}, 300);
+					setTimeout(function() {
+						$(".mask").fadeOut();
+					}, 300);
+				})
+			});
+			$("#but").click(function(){
+				$("#pay_num")[0].innerText = $(".money>ul>li>a>p")[0].innerText;
+			});
+		}
+		
+		function setHideModal(){
+			$(".mask").click(function() {
+				$(".modal").animate({
+					height: '0px',
+				}, 300);
+				setTimeout(function() {
+					$(".mask").fadeOut();
+				}, 300);
+			});
+		}
+		
+		
+
+		function backPage() {
+			var url = decodeURI(location.href);
+			var getval = url.split('?')[1];
+			if (getval && getval.split('&').length >= 2) {
+				var user = getval.split('&')[0].split('=')[1];
+				var pwd = getval.split('&')[1].split('=')[1];
+				if (JSON.parse(localStorage.getItem(user)).passwd == pwd) {
+					username = user;
+					passwd = pwd;
+					info_case = getval.split('&')[2].split('=')[1];
+					info1 = getval.split('&')[3].split('=')[1];
+					info2 = getval.split('&')[4].split('=')[1];
+					info3 = getval.split('&')[5].split('=')[1];
+					info4 = getval.split('&')[6].split('=')[1];
+					info5 = getval.split('&')[7].split('=')[1];
+					$("#back").attr("href", "main.html" + "?" + getval + '&' + "operate=homeBack");
+					$(".info>ul>li>a>p")[0].innerText = info1;
+					$(".address_top>h3")[0].innerText = info2;
+					$(".address_bottom>h3")[0].innerText = info3;
+					$(".address_top>p")[0].innerText = info4;
+					$(".address_bottom>p")[0].innerText = info5;
+					switch (info_case){
+						case '0':
+							$(".info>ul>li>a>p")[2].innerText = "代取送东西";
+							break;
+						case '1':
+							$(".info>ul>li>a>p")[2].innerText = "食堂帮打饭";
+							break;
+						case '2':
+							$(".info>ul>li>a>p")[2].innerText = "商店买东西";
+							break;
+						case '3':
+							$(".info>ul>li>a>p")[2].innerText = "图书馆还书";
+							break;
+						case '4':
+							$(".info>ul>li>a>p")[2].innerText = "图书馆还书";
+							break;
+					}
+				}
+			}
+
+		}
+	
+		// 取两位小数 不四舍五入
+		function returnFloat(value) {
+			value = Number(value).toString();
+			var num = value.split(".").length;
+			if (num == 1) {
+				value = value.toString() + ".00";
+				return value;
+			} else if (num == 2) {
+				if (value.split(".")[1].length == 1) value = value.toString() + "0";
+				else value = value.split(".")[0] + "." + value.split(".")[1].substring(0, 2);
+				return value;
+			}
+		}
+	</script>
+
+</html>
